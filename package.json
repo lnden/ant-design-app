@@ -6,11 +6,34 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "lint": "eslint --ext .js --ext .jsx src",
+    "lint:fix": "eslint --fix --ext .js --fix --ext .jsx src",
+    "lint:style": "stylelint --fix src/**/*.less",
+    "lint:format": "prettier-eslint --write src/**/*.{js,less}",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
+    "antd": "^3.24.3",
+    "babel-plugin-import": "^1.12.2",
+    "dva": "^2.4.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-compat": "^3.3.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "husky": "^3.0.9",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "lint-staged": "^9.4.2",
+    "prettier-eslint": "^9.0.0",
+    "prettier-eslint-cli": "^5.0.0",
     "react": "^16.11.0",
-    "react-dom": "^16.11.0"
+    "react-dom": "^16.11.0",
+    "stylelint": "^11.1.1",
+    "stylelint-config-css-modules": "^1.5.0",
+    "stylelint-config-prettier": "^6.0.0",
+    "stylelint-config-standard": "^19.0.0",
+    "stylelint-scss": "^3.12.0"
   },
   "devDependencies": {
     "@babel/core": "7.6.0",
@@ -66,6 +89,20 @@
     "webpack-dev-server": "3.2.1",
     "webpack-manifest-plugin": "2.1.1",
     "workbox-webpack-plugin": "4.3.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,less,scss,json}": [
+      "prettier-eslint --write",
+      "git add"
+    ],
+    "**/*.{js,jsx}": "eslint --ext .js",
+    "**/*.less": "stylelint --syntax less",
+    "**/*.{scss}": "stylelint --syntax scss"
   },
   "eslintConfig": {
     "extends": "react-app"

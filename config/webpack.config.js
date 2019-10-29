@@ -49,6 +49,11 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+// New add less config
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/;
+// New modify antd import error,  add themes by the way
+const theme = require('../src/config/themes');
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -119,6 +124,19 @@ module.exports = function(webpackEnv) {
       },
     ].filter(Boolean);
     if (preProcessor) {
+      // https://blog.csdn.net/qwe502763576/article/details/83242823
+      let loader = {
+        loader: require.resolve(preProcessor),
+        options: {
+          sourceMap: true,
+        },
+      };
+      // add javascriptEnabled and modifyVars if sass is page will error!
+      if (preProcessor === "less-loader") {
+        loader.options.modifyVars = theme;
+        // https://github.com/ant-design/ant-motion/issues/44
+        loader.options.javascriptEnabled = true;
+      }
       loaders.push(
         {
           loader: require.resolve('resolve-url-loader'),
@@ -126,12 +144,7 @@ module.exports = function(webpackEnv) {
             sourceMap: isEnvProduction && shouldUseSourceMap,
           },
         },
-        {
-          loader: require.resolve(preProcessor),
-          options: {
-            sourceMap: true,
-          },
-        }
+        loader
       );
     }
     return loaders;
@@ -339,21 +352,22 @@ module.exports = function(webpackEnv) {
         // First, run the linter.
         // It's important to do this before Babel processes the JS.
         {
-          test: /\.(js|mjs|jsx|ts|tsx)$/,
-          enforce: 'pre',
-          use: [
-            {
-              options: {
-                cache: true,
-                formatter: require.resolve('react-dev-utils/eslintFormatter'),
-                eslintPath: require.resolve('eslint'),
-                resolvePluginsRelativeTo: __dirname,
-                
-              },
-              loader: require.resolve('eslint-loader'),
-            },
-          ],
-          include: paths.appSrc,
+          // New change eslint console error
+          // test: /\.(js|mjs|jsx|ts|tsx)$/,
+          // enforce: 'pre',
+          // use: [
+          //   {
+          //     options: {
+          //       cache: true,
+          //       formatter: require.resolve('react-dev-utils/eslintFormatter'),
+          //       eslintPath: require.resolve('eslint'),
+          //       resolvePluginsRelativeTo: __dirname,
+          //
+          //     },
+          //     loader: require.resolve('eslint-loader'),
+          //   },
+          // ],
+          // include: paths.appSrc,
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -381,7 +395,7 @@ module.exports = function(webpackEnv) {
                 customize: require.resolve(
                   'babel-preset-react-app/webpack-overrides'
                 ),
-                
+
                 plugins: [
                   [
                     require.resolve('babel-plugin-named-asset-import'),
@@ -392,6 +406,14 @@ module.exports = function(webpackEnv) {
                             '@svgr/webpack?-svgo,+titleProp,+ref![path]',
                         },
                       },
+                    },
+                  ],
+                  // New add 按需加载antd babel-plugin-import
+                  [
+                    'import',
+                    {
+                      libraryName: 'antd',
+                      style: true, // or 'css'
                     },
                   ],
                 ],
@@ -423,7 +445,7 @@ module.exports = function(webpackEnv) {
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
-                
+
                 // If an error happens in a package, it's possible to be
                 // because it was compiled. Thus, we don't want the browser
                 // debugger to show the original code. Instead, the code
@@ -461,6 +483,31 @@ module.exports = function(webpackEnv) {
                 modules: true,
                 getLocalIdent: getCSSModuleLocalIdent,
               }),
+            },
+            // New add less config
+            {
+              test: lessRegex,
+              exclude: sassModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 1,
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                },
+                'less-loader'
+              ),
+              sideEffects: true,
+            },
+            {
+              test: lessModuleRegex,
+              use: getStyleLoaders(
+                {
+                  importLoaders: 1,
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                  modules: true,
+                  getLocalIdent: getCSSModuleLocalIdent,
+                },
+                'less-loader'
+              ),
             },
             // Opt-in support for SASS (using .scss or .sass extensions).
             // By default we support SASS Modules with the

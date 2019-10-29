@@ -1,0 +1,6 @@
+**/*.md
+**/*.svg
+package.json
+dist/*
+build/*
+.DS_Store

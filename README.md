@@ -1,3 +1,5 @@
+English | [简体中文](./README.zh-CN.md)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
