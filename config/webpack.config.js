@@ -416,13 +416,13 @@ module.exports = function(webpackEnv) {
                       style: true, // or 'css'
                     },
                   ],
-                    [
-                      require.resolve('@babel/plugin-proposal-decorators'),
-                      {
-                        legacy: true
-                      }
-                    ],
-                    [require.resolve('@babel/plugin-proposal-optional-chaining')]
+                  [
+                    require.resolve('@babel/plugin-proposal-decorators'),
+                    {
+                      legacy: true
+                    }
+                  ],
+                  [require.resolve('@babel/plugin-proposal-optional-chaining')]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -494,7 +494,7 @@ module.exports = function(webpackEnv) {
             // New add less config
             {
               test: lessRegex,
-              exclude: sassModuleRegex,
+              exclude: lessModuleRegex,
               use: getStyleLoaders(
                 {
                   importLoaders: 1,
