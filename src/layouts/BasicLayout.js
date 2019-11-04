@@ -1,25 +1,49 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Redirect, Switch, Route } from 'dva/router';
 import { Layout } from 'antd';
-import { getRouteData } from '../utils/utils';
+import { connect } from 'dva';
+import { getRouteData, emptyArray } from '../utils/utils';
 import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
+import SiderMenu from '../components/SiderMenu';
 
-const { Content, Header, Footer, Sider } = Layout;
+import logo from '../assets/logo.png';
+
+const { Content, Header, Footer } = Layout;
 
 class BasicLayout extends Component {
     constructor(props) {
         super(props);
+        const { dispatch } = props;
         this.routeList = getRouteData(props.routerData, 'BasicLayout');
+        dispatch({
+            type: 'global/basicLayoutInit',
+            payload: this.routeList,
+        });
     }
 
+    handleMenuCollapse = collapsed => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'global/changeLayoutCollapsed',
+            payload: collapsed,
+        });
+    };
+
     render() {
+        const { collapsed, authMenuList } = this.props;
         return (
             <Layout>
-                <Sider>我是左侧导航内容区域</Sider>
+                <SiderMenu
+                    logo={logo}
+                    location={location}
+                    collapsed={collapsed}
+                    menuData={(authMenuList && authMenuList[0]?.children) || emptyArray}
+                />
                 <Layout>
                     <Header style={{ padding: 0 }}>
-                        <GlobalHeader />
+                        <GlobalHeader collapsed={collapsed} onCollapse={this.handleMenuCollapse} />
                     </Header>
                     <Content>
                         <Switch>
@@ -35,7 +59,14 @@ class BasicLayout extends Component {
                         </Switch>
                     </Content>
                     <Footer>
-                        <GlobalFooter copyright={<>© 2019 北京xxxx科技有限公司</>} />
+                        <GlobalFooter
+                            copyright={
+                                <>
+                                    © 2019 北京xxxx科技有限公司
+                                    {collapsed ? 'true' : 'false'}
+                                </>
+                            }
+                        />
                     </Footer>
                 </Layout>
             </Layout>
@@ -43,4 +74,16 @@ class BasicLayout extends Component {
     }
 }
 
-export default BasicLayout;
+BasicLayout.propTypes = {
+    collapsed: PropTypes.bool.isRequired,
+};
+
+const mapStateToProps = state => {
+    return {
+        collapsed: state.global.collapsed,
+        basicLayoutRouteList: state.global.basicLayoutRouteList,
+        authMenuList: state.menu.authMenuList,
+    };
+};
+
+export default connect(mapStateToProps)(BasicLayout);

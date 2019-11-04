@@ -7,10 +7,20 @@ import styles from './index.module.less';
 const MenuItem = Menu.Item;
 
 class GlobalHeader extends Component {
-    componentWillUnmount() {}
+    componentWillUnmount() {
+        this.triggerResizeEvent.cancel();
+    }
 
     handleToggle = () => {
-        // console.log('切换导航搜索事件');
+        const { collapsed, onCollapse } = this.props;
+        onCollapse(!collapsed);
+        this.triggerResizeEvent();
+    };
+
+    triggerResizeEvent = () => {
+        const event = document.createEvent('HTMLEvents');
+        event.initEvent('resize', true, false);
+        window.dispatchEvent(event);
     };
 
     renderMenu = () => {
@@ -46,7 +56,7 @@ class GlobalHeader extends Component {
     };
 
     render() {
-        const collapsed = true;
+        const { collapsed } = this.props;
         return (
             <div className={styles.header}>
                 <Icon

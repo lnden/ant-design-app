@@ -1,0 +1,91 @@
+{
+    "title": "获取用户信息",
+    "errcode": 0,
+    "message": "OK",
+    "data": {
+        "createBy": {
+            "id": null,
+            "name": null,
+            "avatar": null,
+            "account": "未登录",
+            "mobile": null,
+            "spaceId": null,
+            "spaceName": null,
+            "schoolId": null,
+            "schoolName": null,
+            "sourceId": null
+        },
+        "createTime": "2019-07-20T06:05:58.804+0000",
+        "updateBy": {
+            "id": "5d32af46f7f7a64e764e9a56",
+            "name": "系统管理员",
+            "avatar": null,
+            "account": "13436306675",
+            "mobile": "13436306675",
+            "spaceId": null,
+            "spaceName": null,
+            "schoolId": null,
+            "schoolName": null,
+            "sourceId": "operation"
+        },
+        "updateTime": "2019-08-18T12:46:57.862+0000",
+        "id": "5d32af46f7f7a64e764e9a56",
+        "name": "系统管理员",
+        "gender": "1",
+        "avatar": null,
+        "account": "13436306675",
+        "mobile": "13436306675",
+        "password": "ffd0e707243b2721b136c81a8181a58c",
+        "token": null,
+        "idCardNumber": null,
+        "province": null,
+        "city": null,
+        "county": null,
+        "address": null,
+        "position": null,
+        "hireDate": "2019-08-17T16:00:00.000+0000",
+        "leaveDate": null,
+        "remark": null,
+        "departList": [
+            {
+                "createBy": {
+                    "id": "5d32af46f7f7a64e764e9a56",
+                    "name": "系统管理员",
+                    "avatar": null,
+                    "account": "13436306675",
+                    "mobile": "13436306675",
+                    "spaceId": null,
+                    "spaceName": null,
+                    "schoolId": null,
+                    "schoolName": null,
+                    "sourceId": "operation"
+                },
+                "createTime": "2019-08-18T11:58:40.884+0000",
+                "updateBy": {
+                    "id": "5d32af46f7f7a64e764e9a56",
+                    "name": "系统管理员",
+                    "avatar": null,
+                    "account": "13436306675",
+                    "mobile": "13436306675",
+                    "spaceId": null,
+                    "spaceName": null,
+                    "schoolId": null,
+                    "schoolName": null,
+                    "sourceId": "operation"
+                },
+                "updateTime": "2019-08-18T11:58:40.884+0000",
+                "id": "5d593d707a5b1b89a68c3669",
+                "dingId": null,
+                "name": "运营中心",
+                "dingParentId": null,
+                "parentId": "1",
+                "order": null,
+                "isDeleted": false,
+                "departList": null
+            }
+        ],
+        "status": 1,
+        "isDeleted": false,
+        "departIdList": null
+    }
+}

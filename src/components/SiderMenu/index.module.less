@@ -1,0 +1,59 @@
+@import '~antd/lib/style/themes/default.less';
+.logo {
+    height: 64px;
+    position: relative;
+    line-height: 64px;
+    padding-left: (@menu-collapsed-width - 38px) / 2;
+    transition: all 0.3s;
+    background: #002140;
+    //background: white;
+    overflow: hidden;
+    img {
+        display: inline-block;
+        vertical-align: middle;
+        height: 32px;
+        margin-top: -8px;
+    }
+    h1 {
+        color: white;
+        //color: #002140;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 18px;
+        margin: 0 0 0 5px;
+        font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        font-weight: 600;
+    }
+}
+
+.sider {
+    min-height: 100vh;
+    box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
+    position: relative;
+    z-index: 10;
+    &.light {
+        background-color: white;
+        .logo {
+            background: white;
+            h1 {
+                color: #002140;
+            }
+        }
+    }
+}
+
+.icon {
+    width: 14px;
+    margin-right: 10px;
+}
+
+:global {
+    .drawer .drawer-content {
+        background: #001529;
+    }
+    .ant-menu-item .sider-menu-item-img + span,
+    .ant-menu-submenu-title .sider-menu-item-img + span {
+        transition: opacity 0.3s @ease-in-out, width 0.3s @ease-in-out;
+        opacity: 1;
+    }
+}

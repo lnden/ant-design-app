@@ -76,15 +76,18 @@ const dynamicWrapper = (app, models, component) => {
 export const getRouterData = (app) => [
     {
         layout: 'BasicLayout',
-        component: dynamicWrapper(app,['app'],()=>import('../layouts/BasicLayout')),
+        component: dynamicWrapper(app,['menu','accountSetting','sysMsg'],()=>import('../layouts/BasicLayout')),
         children: [
             {
                 path:'/',
+                name:'首页',
+                accessKey: "version",
                 children: [
                     {
                         path:'workspace',
                         name:'工作台',
                         icon: 'desktop',
+                        accessKey: 'workspace',// 是否出现在左侧菜单的依据
                         component :dynamicWrapper(app,['workspace'],()=>import('../containers/Workspace')),
                     }
                 ]
