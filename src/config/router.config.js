@@ -1,6 +1,6 @@
-import React,{createElement} from 'react'
+import React, { createElement } from 'react';
 import Loadable from 'react-loadable';
-import {Button,Spin} from 'antd'
+import { Button, Spin } from 'antd';
 
 const LoadingComponent = ({ error, timedOut, retry, pastDelay }) => {
     if (error) {
@@ -62,11 +62,13 @@ const dynamicWrapper = (app, models, component) => {
             }
             return component().then(raw => {
                 const Component = raw.default || raw;
-                return props =>
-                    createElement(Component, {
+                return props =>{
+                    return  createElement(Component, {
                         ...props,
                         routerData: routerDataCache,
                     });
+                }
+
             });
         },
         loading: LoadingComponent,
@@ -76,28 +78,55 @@ const dynamicWrapper = (app, models, component) => {
 export const getRouterData = (app) => [
     {
         layout: 'BasicLayout',
-        component: dynamicWrapper(app,['menu','accountSetting','sysMsg'],()=>import('../layouts/BasicLayout')),
+        component: dynamicWrapper(app, ['menu', 'accountSetting', 'sysMsg'], () => import('../layouts/BasicLayout')),
         children: [
             {
-                path:'/',
-                name:'首页',
-                accessKey: "version",
+                path: '/',
+                name: '首页',
+                accessKey: 'version',
                 children: [
                     {
-                        path:'workspace',
-                        name:'工作台',
+                        path: 'workspace',
+                        name: '工作台',
                         icon: 'desktop',
-                        accessKey: 'workspace',// 是否出现在左侧菜单的依据
-                        component :dynamicWrapper(app,['workspace'],()=>import('../containers/Workspace')),
-                    }
-                ]
-            }
-        ]
+                        accessKey: 'workspace',
+                        component: dynamicWrapper(app, ['workspace'], () => import('../containers/Workspace')),
+                    },
+                ],
+            },
+            {
+                path: 'system',
+                name: '系统管理',
+                icon: 'setting',
+                accessKey: 'system',
+                component: dynamicWrapper(app, [], () => import('../containers/System')),
+                children: [
+                    {
+                        path: 'menu',
+                        name: '菜单管理',
+                        accessKey: 'menu',
+                        component: dynamicWrapper(app, [], () => import('../containers/System/Menu')),
+                    },
+                    {
+                        path: 'role',
+                        name: '角色管理',
+                        accessKey: 'role',
+                        component: dynamicWrapper(app, [], () => import('../containers/System/Role')),
+                    },
+                    {
+                        path: 'user',
+                        name: '用户管理',
+                        accessKey: 'user',
+                        component: dynamicWrapper(app, [], () => import('../containers/System/User')),
+                    },
+                ],
+            },
+        ],
     },
     {
         layout: 'UserLayout',
-        component: dynamicWrapper(app,[],()=>import('../layouts/UserLayout')),
-        children :[
+        component: dynamicWrapper(app, [], () => import('../layouts/UserLayout')),
+        children: [
             {
                 path: 'user',
                 children: [
@@ -107,8 +136,8 @@ export const getRouterData = (app) => [
                         component: dynamicWrapper(
                             app,
                             ['login'],
-                            ()=>import('../containers/User/Login')
-                        )
+                            () => import('../containers/User/Login'),
+                        ),
                     },
                     {
                         path: 'register',
@@ -116,8 +145,8 @@ export const getRouterData = (app) => [
                         component: dynamicWrapper(
                             app,
                             ['register'],
-                            ()=>import('../containers/User/Register')
-                        )
+                            () => import('../containers/User/Register'),
+                        ),
                     },
                     {
                         path: 'resetPassword',
@@ -125,11 +154,11 @@ export const getRouterData = (app) => [
                         component: dynamicWrapper(
                             app,
                             ['resetPassword'],
-                            ()=>import('../containers/User/ResetPassword')
-                        )
-                    }
-                ]
-            }
-        ]
-    }
+                            () => import('../containers/User/ResetPassword'),
+                        ),
+                    },
+                ],
+            },
+        ],
+    },
 ];

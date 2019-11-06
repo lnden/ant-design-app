@@ -49,26 +49,26 @@ export const getMenuMatchKeys = (flatMenuKeys, paths) =>
     );
 
 class SiderMenu extends Component {
+    flatMenuKeys = [];
+
     constructor(props) {
         super(props);
-        this.flatMenuKeys = getFlatMenuKeys(props.menuData);
         this.state = {
-            openKeys: this.getDefaultCollapsedSubMenus(props),
+            openKeys: [],
         };
     }
 
     componentWillReceiveProps(nextProps) {
-        // const { location, menuData } = this.props;
-        // console.log(this.props, 111111111111);
-        // const { location: nextLocation, menuList: nextMenuList } = nextProps;
-        // if (nextMenuList.length !== menuData.length) {
-        //     this.flatMenuKeys = getFlatMenuKeys(nextMenuList);
-        // }
-        // if (nextLocation.pathname !== location.pathname) {
-        //     this.setState({
-        //         openKeys: this.getDefaultCollapsedSubMenus(nextProps),
-        //     });
-        // }
+        const { location, menuData } = this.props;
+        const { location: nextLocation, menuData: nextMenuList } = nextProps;
+        if (nextMenuList.length !== menuData.length) {
+            this.flatMenuKeys = getFlatMenuKeys(nextMenuList);
+        }
+        if (nextLocation.pathname !== location.pathname) {
+            this.setState({
+                openKeys: this.getDefaultCollapsedSubMenus(nextProps),
+            });
+        }
     }
 
     /**
@@ -85,16 +85,6 @@ class SiderMenu extends Component {
         return getMenuMatchKeys(this.flatMenuKeys, urlToList(pathname));
     }
 
-    // permission to check
-    checkPermissionItem = (authority, ItemDom) => {
-        const { Authorized } = this.props;
-        if (Authorized && Authorized.check) {
-            const { check } = Authorized;
-            return check(authority, ItemDom);
-        }
-        return ItemDom;
-    };
-
     // 转化路径, 替换路径内多余'/'
     conversionPath = path => {
         if (path && path.indexOf('http') === 0) {
@@ -104,10 +94,16 @@ class SiderMenu extends Component {
         }
     };
 
+    /**
+     * @name 获取Menu Item Path
+     * @param item
+     * @returns {*}
+     */
     getMenuItemPath = item => {
         const itemPath = this.conversionPath(item.path);
         const icon = getIcon(item.icon);
         const { target, name } = item;
+        // Is it a http link
         if (/^https?:\/\//.test(itemPath)) {
             return (
                 <a href={itemPath} target={target}>
@@ -125,6 +121,11 @@ class SiderMenu extends Component {
         );
     };
 
+    /**
+     * @name get subMenu or Item
+     * @param item
+     * @returns {*}
+     */
     getSubMenuOrItem = item => {
         if (item.children && item.children.some(child => child.name)) {
             const childrenItems = this.getNavMenuItems(item.children);
@@ -154,15 +155,16 @@ class SiderMenu extends Component {
         }
     };
 
-    getNavMenuItems = menusData => {
-        if (!menusData) return [];
-        return menusData
+    /**
+     * @name get menu node
+     * @param menuList
+     * @returns {*}
+     */
+    getNavMenuItems = menuList => {
+        if (!menuList) return [];
+        return menuList
             .filter(item => item.name && !item.hideInMenu)
-            .map(item => {
-                const ItemDom = this.getSubMenuOrItem(item);
-                return this.checkPermissionItem(item.authority, ItemDom);
-            })
-            .filter(item => item);
+            .map(item => this.getSubMenuOrItem(item));
     };
 
     // Get the currently selected menu
@@ -171,6 +173,22 @@ class SiderMenu extends Component {
             location: { pathname },
         } = this.props;
         return getMenuMatchKeys(this.flatMenuKeys, urlToList(pathname));
+    };
+
+    isMainMenu = key => {
+        const { menuData } = this.props;
+        return menuData.some(
+            item => key && (item.key === key || item.path === key || item.url === key),
+        );
+    };
+
+    // 展开收起菜单函数
+    handleOpenChange = openKeys => {
+        const lastOpenKey = openKeys[openKeys.length - 1];
+        const moreThanOne = openKeys.filter(openKey => this.isMainMenu(openKey)).length > 1;
+        this.setState({
+            openKeys: moreThanOne ? [lastOpenKey] : [...openKeys],
+        });
     };
 
     render() {
@@ -185,7 +203,7 @@ class SiderMenu extends Component {
         }
         return (
             <Sider trigger={null} collapsible collapsed={collapsed} className={styles.sider}>
-                <div className={styles.logo}>
+                <div className={styles.logo} key="logo">
                     <Link to="/">
                         <img src={logo} alt="logo" />
                         <h1>Ant Design App</h1>
@@ -196,6 +214,7 @@ class SiderMenu extends Component {
                     theme={theme}
                     mode="inline"
                     {...menuProps}
+                    onOpenChange={this.handleOpenChange}
                     selectedKeys={selectedKeys}
                 >
                     {this.getNavMenuItems(menuData)}
