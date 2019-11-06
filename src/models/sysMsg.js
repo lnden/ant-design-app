@@ -1,3 +1,4 @@
+import { createAction } from '../utils';
 import { getUnreadCount } from '../services/sysMsgRequest';
 
 const defaultState = {
@@ -12,10 +13,7 @@ export default {
     effects: {
         *getNotifyCount(_, { call, put }) {
             const count = yield call(getUnreadCount);
-            yield put({
-                type: 'updateNotifyCount',
-                payload: count,
-            });
+            yield put(createAction('updateNotifyCount')(count));
         },
     },
 };

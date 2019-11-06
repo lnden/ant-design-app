@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { Redirect, Route, Switch } from 'dva/router';
+import PropTypes from 'prop-types';
 import { emptyArray } from '../../utils/utils';
 
 export default Target => {

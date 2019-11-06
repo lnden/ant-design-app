@@ -1,6 +1,7 @@
 import { routerRedux } from 'dva/router';
-import { setCache } from '../utils/cookies';
 import config from '../config/app.config';
+import { createAction } from '../utils';
+import { setCache } from '../utils/cookies';
 import { getProfile } from '../services/userRequest';
 
 const defaultState = {
@@ -31,11 +32,7 @@ export default {
 
             if (!profile) return;
 
-            yield put({
-                type: 'updateProfile',
-                payload: profile,
-            });
-
+            yield put(createAction('updateProfile')(profile));
             yield call(setCache, {
                 key: config.localCacheAlias.profile,
                 value: profile,

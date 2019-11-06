@@ -1,20 +1,42 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Redirect, Switch, Route } from 'dva/router';
+import { connect } from 'dva';
+import { Redirect, Switch, Route, routerRedux } from 'dva/router';
 import { Layout } from 'antd';
+import PropTypes from 'prop-types';
 import DocumentTitle from 'react-document-title';
+import { ContainerQuery } from 'react-container-query';
 import pathToRegexp from 'path-to-regexp';
 import classNames from 'classnames';
-import { ContainerQuery } from 'react-container-query';
-import { connect } from 'dva';
+import { createAction } from '../utils';
 import { getRouteData, emptyArray } from '../utils/utils';
 import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
-
 import logo from '../assets/logo.png';
 
 const { Content, Header, Footer } = Layout;
+/**
+ * 获取面包屑映射
+ * @param {Array} routerList 路由配置
+ */
+const getBreadcrumbNameMap = routerList => {
+    // 内部多写一层，是为了 memoizeOne
+    const computedWholeRouteUrl = (list, parentPath = '') => {
+        const result = {};
+        const childResult = {};
+        for (let i = 0; i < list.length; i += 1) {
+            const item = list[i];
+            const path = `${parentPath}/${item.path}`.replace(/\/+/g, '/');
+            result[path] = item;
+            if (item.children) {
+                /* eslint-disable*/
+                Object.assign(childResult, computedWholeRouteUrl(item.children, path));
+            }
+        }
+        return { ...list, ...result, ...childResult };
+    };
+    return computedWholeRouteUrl(routerList);
+};
 
 const query = {
     'screen-xs': {
@@ -56,10 +78,7 @@ class BasicLayout extends Component {
         this.routeList = getRouteData(props.routerData, 'BasicLayout');
         this.renderRouteComponentList();
         const { dispatch } = props;
-        dispatch({
-            type: 'global/basicLayoutInit',
-            payload: this.routeList,
-        });
+        dispatch(createAction('global/basicLayoutInit')({ routeList: this.routeList }));
     }
 
     renderRouteComponentList = () => {
@@ -78,22 +97,36 @@ class BasicLayout extends Component {
 
     handleMenuCollapse = collapsed => {
         const { dispatch } = this.props;
-        dispatch({
-            type: 'global/changeLayoutCollapsed',
-            payload: collapsed,
-        });
+        dispatch(createAction('global/changeLayoutCollapsed')(collapsed));
+    };
+
+    matchParamsPath = pathname => {
+        const breadcrumbNameMap = getBreadcrumbNameMap(this.routeList);
+        const pathKey = Object.keys(breadcrumbNameMap).find(key =>
+            pathToRegexp(key).test(pathname),
+        );
+        return breadcrumbNameMap[pathKey];
     };
 
     getPageTitle = () => {
         const { location } = this.props;
         const { pathname } = location;
-        let title = '极致驾服';
-        this.routeList.forEach(item => {
-            if (pathToRegexp(item.path).test(pathname)) {
-                title = item.name || title;
-            }
-        });
-        return title;
+        let title = 'React';
+        const currRouterData = this.matchParamsPath(pathname);
+        if (currRouterData) {
+            title = currRouterData.name;
+        }
+        return `${title} - 管理系统`;
+    };
+
+    handleMenuClick = ({ key }) => {
+        const { dispatch } = this.props;
+        if (key === 'logout') {
+            dispatch(createAction('login/logout')());
+        }
+        if (key === 'accountSetting') {
+            dispatch(routerRedux.push('/accountSetting'));
+        }
     };
 
     renderLayout = params => {
@@ -108,7 +141,11 @@ class BasicLayout extends Component {
                 />
                 <Layout>
                     <Header style={{ padding: 0 }}>
-                        <GlobalHeader collapsed={collapsed} onCollapse={this.handleMenuCollapse} />
+                        <GlobalHeader
+                            collapsed={collapsed}
+                            onCollapse={this.handleMenuCollapse}
+                            onMenuClick={this.handleMenuClick}
+                        />
                     </Header>
                     <Content>
                         <Switch>

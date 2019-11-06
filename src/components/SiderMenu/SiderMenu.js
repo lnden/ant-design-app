@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'dva/router';
+import { Layout, Menu, Icon } from 'antd';
 import pathToRegexp from 'path-to-regexp';
 import { urlToList } from '../_utils/pathTools';
 import styles from './index.module.less';

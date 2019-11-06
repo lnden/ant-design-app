@@ -1,3 +1,4 @@
+import { createAction } from '../utils';
 import { computeMenu, getMenuTree } from '../utils/utils';
 import { getAuthMenuList } from '../services/menuRequest';
 
@@ -30,10 +31,7 @@ export default {
             }
             const newAuthMenuList = computeMenu(authMennuList.data, routeList);
             // reloadAuthorized();
-            yield put({
-                type: 'updateAuthMenuList',
-                payload: newAuthMenuList,
-            });
+            yield put(createAction('updateAuthMenuList')(newAuthMenuList));
         },
     },
 };

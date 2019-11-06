@@ -62,12 +62,12 @@ const dynamicWrapper = (app, models, component) => {
             }
             return component().then(raw => {
                 const Component = raw.default || raw;
-                return props =>{
-                    return  createElement(Component, {
+                return props => {
+                    return createElement(Component, {
                         ...props,
                         routerData: routerDataCache,
                     });
-                }
+                };
 
             });
         },
@@ -95,6 +95,48 @@ export const getRouterData = (app) => [
                 ],
             },
             {
+                path: 'biz',
+                name: '业务中心solution',
+                icon: '',
+                accessKey: 'biz',
+                component: dynamicWrapper(app, [], () => import('../containers/Biz')),
+                children: [
+                    {
+                        path: 'apply_accept',
+                        name: '报名受理',
+                        accessKey: 'apply_accept',
+                        component: dynamicWrapper(app, [], () => import('../containers/Biz/ApplyAccept')),
+                    },
+                    {
+                        path: 'teach',
+                        name: '教研管理',
+                        accessKey: 'teach',
+                        component: dynamicWrapper(app, [], () => import('../containers/Biz')),
+                        children: [
+                            {
+                                path: 'coach',
+                                name: '教练管理',
+                                accessKey: 'coach',
+                                component: dynamicWrapper(app, [], () => import('../containers/Biz/Coach')),
+                            },
+                            {
+                                path: 'course',
+                                name: '课程管理',
+                                accessKey: 'course',
+                                component: dynamicWrapper(app, [], () => import( '../containers/Biz/CourseManage')),
+                            },
+                        ],
+                    },
+                    {
+                        path: 'space',
+                        name: '场地管理',
+                        accessKey: 'space',
+                        component: dynamicWrapper(app, [], () => import('../containers/Biz/Space')),
+                    },
+                ],
+
+            },
+            {
                 path: 'system',
                 name: '系统管理',
                 icon: 'setting',
@@ -119,8 +161,31 @@ export const getRouterData = (app) => [
                         accessKey: 'user',
                         component: dynamicWrapper(app, [], () => import('../containers/System/User')),
                     },
+                    {
+                        path: 'sysMsg',
+                        name: '系统消息',
+                        accessKey: 'sysMsg',
+                        component: dynamicWrapper(app, [], () => import('../containers/System/SysMsg')),
+                    },
+                    {
+                        path: 'sysLog',
+                        name: '系统日志',
+                        accessKey: 'sysLog',
+                        component: dynamicWrapper(app, [], () => import('../containers/System/SysLog')),
+                    },
                 ],
             },
+            {
+                path: 'feedback',
+                name: '意见反馈',
+                component: dynamicWrapper(app, [], () => import('../containers/Feedback')),
+            },
+            {
+                path: 'accountSetting',
+                name: '账号设置',
+                component: dynamicWrapper(app, ['accountSetting'], () => import('../containers/AccountSetting')),
+            },
+
         ],
     },
     {

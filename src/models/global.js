@@ -1,7 +1,8 @@
 import { routerRedux } from 'dva/router';
-import { getCache } from '../utils/cookies';
-import { delay } from '../utils/utils';
 import config from '../config/app.config';
+import { createAction } from '../utils';
+import { delay } from '../utils/utils';
+import { getCache } from '../utils/cookies';
 
 export default {
     namespace: 'global',
@@ -11,25 +12,23 @@ export default {
     },
     subscriptions: {},
     reducers: {
-        updateRouteList(state, action) {
+        updateRouteList(state, { payload }) {
             return {
                 ...state,
-                basicLayoutRouteList: action.payload,
+                basicLayoutRouteList: payload,
             };
         },
-        changeLayoutCollapsed(state, action) {
+        changeLayoutCollapsed(state, { payload }) {
             return {
                 ...state,
-                collapsed: action.payload,
+                collapsed: payload,
             };
         },
     },
     effects: {
         *basicLayoutInit({ payload }, { call, put }) {
-            yield put({
-                type: 'updateRouteList',
-                payload,
-            });
+            const { routeList } = payload;
+            yield put(createAction('updateRouteList')(routeList));
             const token = yield call(getCache, {
                 key: config.localCacheAlias.token,
                 type: 2,
@@ -39,16 +38,9 @@ export default {
                 yield put(routerRedux.replace('/user/login'));
                 return;
             }
-            yield put({
-                type: 'accountSetting/getProfile',
-            });
-            yield put({
-                type: 'menu/getAuthMenuList',
-                payload,
-            });
-            yield put({
-                type: 'sysMsg/getNotifyCount',
-            });
+            yield put(createAction('accountSetting/getProfile')());
+            yield put(createAction('menu/getAuthMenuList')(routeList));
+            yield put(createAction('sysMsg/getNotifyCount')());
         },
     },
 };

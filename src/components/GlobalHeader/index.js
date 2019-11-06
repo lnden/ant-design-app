@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Icon, Avatar, Dropdown, Menu } from 'antd';
 import { Link } from 'dva/router';
+import { Icon, Avatar, Dropdown, Menu } from 'antd';
+import Debounce from 'lodash-decorators/debounce';
 import NoticeIcon from '../NoticeIcon';
 import styles from './index.module.less';
 
@@ -17,11 +18,13 @@ class GlobalHeader extends Component {
         this.triggerResizeEvent();
     };
 
-    triggerResizeEvent = () => {
+    /* eslint-disable*/
+    @Debounce(6000)
+    triggerResizeEvent() {
         const event = document.createEvent('HTMLEvents');
         event.initEvent('resize', true, false);
         window.dispatchEvent(event);
-    };
+    }
 
     renderMenu = () => {
         const { onMenuClick } = this.props;

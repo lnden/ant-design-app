@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Redirect, Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
 import pathToRegexp from 'path-to-regexp';
-import GlobalFooter from '../components/GlobalFooter';
 import { getRouteData } from '../utils/utils';
+import GlobalFooter from '../components/GlobalFooter';
+
 import styles from './userLayout.module.less';
 
 const copyright = <>© 2019 北京xxx科技有限公司</>;
