@@ -29,7 +29,6 @@ const getBreadcrumbNameMap = routerList => {
             const path = `${parentPath}/${item.path}`.replace(/\/+/g, '/');
             result[path] = item;
             if (item.children) {
-                /* eslint-disable*/
                 Object.assign(childResult, computedWholeRouteUrl(item.children, path));
             }
         }
