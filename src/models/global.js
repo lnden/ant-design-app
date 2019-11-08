@@ -12,17 +12,20 @@ export default {
     },
     subscriptions: {},
     reducers: {
+        /* eslint-disable no-param-reassign */
         updateRouteList(state, { payload }) {
-            return {
-                ...state,
-                basicLayoutRouteList: payload,
-            };
+            state.basicLayoutRouteList = payload;
+            // return {
+            //     ...state,
+            //     basicLayoutRouteList: payload,
+            // };
         },
         changeLayoutCollapsed(state, { payload }) {
-            return {
-                ...state,
-                collapsed: payload,
-            };
+            state.collapsed = payload;
+            // return {
+            //     ...state,
+            //     collapsed: payload,
+            // };
         },
     },
     effects: {

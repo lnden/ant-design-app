@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Redirect, Switch, Route, routerRedux } from 'dva/router';
-import { Layout } from 'antd';
+import { Layout, Spin } from 'antd';
 import PropTypes from 'prop-types';
 import DocumentTitle from 'react-document-title';
 import { ContainerQuery } from 'react-container-query';
 import pathToRegexp from 'path-to-regexp';
 import classNames from 'classnames';
-import { createAction } from '../utils';
+import { createAction, selector, loadingSelector } from '../utils';
 import { getRouteData, emptyArray } from '../utils/utils';
 import GlobalHeader from '../components/GlobalHeader';
 import GlobalFooter from '../components/GlobalFooter';
@@ -62,10 +62,22 @@ const query = {
     },
 };
 
+const mapStateToProps = state => {
+    return {
+        collapsed: selector('global', 'collapsed')(state),
+        authMenuList: state.menu.authMenuList,
+        profileLoading: !!state.loading.effects['accountSetting/getProfile'],
+        authMenuListLoading: loadingSelector('menu/getAuthMenuList')(state),
+    };
+};
+
+@connect(mapStateToProps)
 class BasicLayout extends Component {
     static propTypes = {
         collapsed: PropTypes.bool.isRequired,
         authMenuList: PropTypes.array.isRequired,
+        profileLoading: PropTypes.bool.isRequired,
+        authMenuListLoading: PropTypes.bool.isRequired,
     };
 
     routeList = [];
@@ -129,7 +141,9 @@ class BasicLayout extends Component {
     };
 
     renderLayout = params => {
-        const { collapsed, authMenuList } = this.props;
+        const { collapsed, authMenuList, profileLoading, authMenuListLoading } = this.props;
+        // console.log(authMenuListLoading, 111);
+        // console.log(collapsed,2222)
         const layout = (
             <Layout>
                 <SiderMenu
@@ -142,12 +156,18 @@ class BasicLayout extends Component {
                     <Header style={{ padding: 0 }}>
                         <GlobalHeader
                             collapsed={collapsed}
+                            profileLoading={profileLoading}
                             onCollapse={this.handleMenuCollapse}
                             onMenuClick={this.handleMenuClick}
                         />
                     </Header>
                     <Content>
                         <Switch>
+                            {authMenuListLoading && (
+                                <Route
+                                    render={() => <Spin size="large" className="global-spin" />}
+                                />
+                            )}
                             {this.routeComponentList}
                             <Redirect from="/user" to="/user/login" />
                         </Switch>
@@ -177,11 +197,4 @@ class BasicLayout extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        collapsed: state.global.collapsed,
-        authMenuList: state.menu.authMenuList,
-    };
-};
-
-export default connect(mapStateToProps)(BasicLayout);
+export default BasicLayout;

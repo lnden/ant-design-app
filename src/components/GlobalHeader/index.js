@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'dva/router';
-import { Icon, Avatar, Dropdown, Menu } from 'antd';
+import { Icon, Avatar, Dropdown, Menu, Spin } from 'antd';
 import Debounce from 'lodash-decorators/debounce';
 import NoticeIcon from '../NoticeIcon';
 import styles from './index.module.less';
@@ -48,6 +48,10 @@ class GlobalHeader extends Component {
     };
 
     renderDropDown = () => {
+        const { profileLoading } = this.props;
+        if (profileLoading) {
+            return <Spin size="small" style={{ marginLeft: 8 }} />;
+        }
         return (
             <Dropdown overlay={this.renderMenu()}>
                 <span className={`${styles.action} ${styles.account}`}>

@@ -4114,6 +4114,21 @@ dva-core@^1.4.0:
     redux-saga "^0.16.0"
     warning "^3.0.0"
 
+dva-immer@^0.4.16:
+  version "0.4.16"
+  resolved "https://registry.yarnpkg.com/dva-immer/-/dva-immer-0.4.16.tgz#1fb1d91931f296179ced527583d6ab9a8656f2e0"
+  integrity sha512-sytbRDbCdP6v7Ak9JXAGBF8DVEQANL/s7LQoZqtmk2tTAe+vnRpZuNt+YYcAcYBOtGCocVxmPsizCIxvk+V1Pg==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    immer "^2.1.1"
+
+dva-loading@^3.0.17:
+  version "3.0.17"
+  resolved "https://registry.yarnpkg.com/dva-loading/-/dva-loading-3.0.17.tgz#773239e36cba273c2b00ce50e792c9cc5d5b2b9b"
+  integrity sha512-qD2fENkDK/m9roAzHjvATdEvXL+MbtNv2dc5Ee0PHJPAKhZ6Tr1C2abkbUyWnYb0HPOYbwRghJJbgmq59sMDuA==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+
 dva@^2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/dva/-/dva-2.4.1.tgz#a3eeb07bb8bc6e2ff9ffe31799d03cb69e45f5fd"
@@ -5845,6 +5860,11 @@ immer@1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
+
+immer@^2.1.1:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-2.1.5.tgz#0389947455c5a2c7a47f1e6f415c9d1a62a1ebed"
+  integrity sha512-xyjQyTBYIeiz6jd02Hg12jV+9QISwF1crLcwTlzHpWH4e0ryNWj1kacpTwimK3bJV5NKKXw458G2vpqoB/inFA==
 
 immutable@^3.7.4:
   version "3.8.2"

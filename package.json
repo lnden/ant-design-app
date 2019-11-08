@@ -22,6 +22,8 @@
     "babel-plugin-import": "^1.12.2",
     "classnames": "^2.2.6",
     "dva": "^2.4.1",
+    "dva-immer": "^0.4.16",
+    "dva-loading": "^3.0.17",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-compat": "^3.3.0",

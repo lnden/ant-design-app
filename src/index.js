@@ -1,5 +1,7 @@
 import './polyfill';
 import dva from 'dva';
+import createLoading from 'dva-loading';
+import createImmer from 'dva-immer';
 import { createBrowserHistory } from 'history';
 import './global.less';
 
@@ -9,7 +11,8 @@ const app = dva({
 });
 
 // 2. Plugin
-app.use({});
+app.use(createLoading());
+app.use(createImmer());
 
 // 3. Model
 app.model(require('./models/global').default);
